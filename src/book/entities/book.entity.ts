@@ -9,6 +9,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Author} from "../../author/entities/author.entity";
+import {Type} from "class-transformer";
 
 @Entity()
 export class Book {
@@ -29,6 +30,7 @@ export class Book {
 
     @ManyToMany(type => Author)
     @JoinTable()
+    @Type(() => Author)
     authors: Author[];
 
     @CreateDateColumn()

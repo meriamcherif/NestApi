@@ -10,6 +10,17 @@ export class CreateBookDto {
     @ApiProperty()
     @IsNotEmpty()
     @IsString()
+    ISBN: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    publicationDate: Date;
+
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
     authorId: number;
 
     @ApiProperty()
