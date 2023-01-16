@@ -1,4 +1,15 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from '@nestjs/common';
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Query,
+    UseInterceptors
+} from '@nestjs/common';
 import {BookService} from './book.service';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
@@ -12,16 +23,19 @@ export class BookController {
     }
 
     @Post()
+    @UseInterceptors(ClassSerializerInterceptor)
     create(@Body() createBookDto: CreateBookDto) {
         return this.bookService.create(createBookDto);
     }
 
     @Get()
+    @UseInterceptors(ClassSerializerInterceptor)
     findAll() {
         return this.bookService.findAll();
     }
 
     @Get('search')
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiOkResponse({type: [User]})
     @ApiQuery({name: 'title', required: false})
     @ApiQuery({name: 'ISBN', required: false})
@@ -33,16 +47,19 @@ export class BookController {
     }
 
     @Get(':id')
+    @UseInterceptors(ClassSerializerInterceptor)
     findOne(@Param('id') id: string) {
         return this.bookService.findById(+id);
     }
 
     @Patch(':id')
+    @UseInterceptors(ClassSerializerInterceptor)
     update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
         return this.bookService.update(+id, updateBookDto);
     }
 
     @Delete(':id')
+    @UseInterceptors(ClassSerializerInterceptor)
     remove(@Param('id') id: string) {
         return this.bookService.remove(+id);
     }

@@ -1,9 +1,21 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from '@nestjs/common';
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Query,
+    UseInterceptors
+} from '@nestjs/common';
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {User} from "./entities/user.entity";
+import {classToPlain} from "class-transformer";
 
 @Controller('user')
 @ApiTags('users')
@@ -14,9 +26,9 @@ export class UserController {
     @ApiCreatedResponse({description: 'The user has been successfully created.', type: User})
     @ApiOkResponse({description: 'User already exist.', type: User})
     @Post()
+    @UseInterceptors(ClassSerializerInterceptor)
     async create(@Body() createUserDto: CreateUserDto): Promise<User> {
         const user = (await this.userService.search({username: createUserDto.username}))[0];
-        console.log(user);
         if (user) {
             return user;
         }
@@ -26,12 +38,14 @@ export class UserController {
     @ApiBearerAuth()
     @ApiCreatedResponse({description: 'The users has been successfully retrieved.', type: User})
     @ApiOkResponse({description: 'User already exist.', type: User})
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get()
     findAll() {
         return this.userService.findAll();
     }
 
     @Get('search')
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiOkResponse({description: 'The user has been successfully retrieved.', type: [User]})
     @ApiQuery({name: 'username', required: false})
     @ApiQuery({name: 'firstName', required: false})
@@ -47,6 +61,7 @@ export class UserController {
     }
 
     @Get(':id')
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiBearerAuth()
     @ApiOkResponse({description: 'The user has been successfully retrieved.', type: User})
     findById(@Param('id') id: string) {
@@ -55,6 +70,7 @@ export class UserController {
 
 
     @Patch(':id')
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiBearerAuth()
     @ApiOkResponse({description: 'The user has been successfully updated.', type: User})
     update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
@@ -62,6 +78,7 @@ export class UserController {
     }
 
     @Delete(':id')
+    @UseInterceptors(ClassSerializerInterceptor)
     remove(@Param('id') id: string) {
         return this.userService.remove(+id);
     }
