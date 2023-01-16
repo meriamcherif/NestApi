@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {Book} from "./entities/book.entity";
@@ -22,19 +22,33 @@ export class BookService {
     }
 
     async findById(id: number): Promise<Book> {
-        return await this.bookRepository.findOneBy({id: id});
+        const book = await this.bookRepository.findOneBy({id: id});
+        if (book == null) {
+            throw new NotFoundException(`Book with id ${id} not found`);
+        }
+        return book;
     }
 
-    async findByTitle(title: string): Promise<Book[]> {
-        return await this.bookRepository.find({where: {title: title}});
+    async search(options: { title?: string, ISBN?: string; lastName?: string; email?: string }): Promise<Book[]> {
+        const queryBuilder = this.bookRepository.createQueryBuilder('book');
+        if (options.title) {
+            queryBuilder.andWhere('book.title LIKE :title', {title: `%${options.title}%`});
+        }
+        if (options.ISBN) {
+            queryBuilder.andWhere('book.ISBN LIKE :isbn', {isbn: `%${options.ISBN}%`});
+        }
+        return queryBuilder.getMany();
     }
 
     async create(createBookDto: CreateBookDto): Promise<Book> {
         const book = new Book();
-        const author = await this.authorService.findById(createBookDto.authorId);
-        console.log(author);
+        try {
+            const author = await this.authorService.findById(createBookDto.authorId);
+            book.authors = [author];
+        } catch (e) {
+            throw new NotFoundException(`Author with id ${createBookDto.authorId} not found`);
+        }
         book.title = createBookDto.title;
-        book.authors = [author];
         book.price = createBookDto.price;
         book.ISBN = createBookDto.ISBN;
         book.publicationDate = createBookDto.publicationDate;
@@ -43,14 +57,18 @@ export class BookService {
 
     async update(id: number, updateBookDto: UpdateBookDto): Promise<Book> {
         const book = await this.findById(id);
-        book.title = updateBookDto.title;
-        book.price = updateBookDto.price;
-        book.ISBN = updateBookDto.ISBN;
-        book.publicationDate = updateBookDto.publicationDate;
+        if (updateBookDto.title)
+            book.title = updateBookDto.title;
+        if (updateBookDto.price)
+            book.price = updateBookDto.price;
+        if (updateBookDto.ISBN)
+            book.ISBN = updateBookDto.ISBN;
+        if (updateBookDto.publicationDate)
+            book.publicationDate = updateBookDto.publicationDate;
         return await this.bookRepository.save(book);
     }
 
     async remove(id: number): Promise<void> {
-        await this.bookRepository.softDelete(id)
+        await this.bookRepository.softDelete(id);
     }
 }
