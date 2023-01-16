@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {CreateAuthorDto} from './dto/create-author.dto';
@@ -14,7 +14,11 @@ export class AuthorService {
     }
 
     async findById(id: number): Promise<Author> {
-        return this.authorRepository.findOneBy({id: id});
+        const author = await this.authorRepository.findOneBy({id: id});
+        if (author == null) {
+            throw new NotFoundException(`Author with id ${id} not found`);
+        }
+        return author;
     }
     async findAll(): Promise<Author[]> {
         return this.authorRepository.find();
