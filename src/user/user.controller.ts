@@ -1,8 +1,8 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from '@nestjs/common';
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
-import {ApiBearerAuth, ApiCreatedResponse, ApiOkResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery} from "@nestjs/swagger";
 import {User} from "./entities/user.entity";
 
 @Controller('user')
@@ -10,17 +10,39 @@ export class UserController {
     constructor(private readonly userService: UserService) {
     }
 
-    @ApiBearerAuth()
     @ApiCreatedResponse({description: 'The user has been successfully created.', type: User})
     @ApiOkResponse({description: 'User already exist.', type: User})
     @Post()
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.userService.create(createUserDto);
+    async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+        const user = (await this.userService.search({username: createUserDto.username}))[0];
+        console.log(user);
+        if (user) {
+            return user;
+        }
+        return await this.userService.create(createUserDto);
     }
 
+    @ApiBearerAuth()
+    @ApiCreatedResponse({description: 'The users has been successfully retrieved.', type: User})
+    @ApiOkResponse({description: 'User already exist.', type: User})
     @Get()
     findAll() {
         return this.userService.findAll();
+    }
+
+    @Get('search')
+    @ApiOkResponse({description: 'The user has been successfully retrieved.', type: [User]})
+    @ApiQuery({name: 'username', required: false})
+    @ApiQuery({name: 'firstName', required: false})
+    @ApiQuery({name: 'lastName', required: false})
+    @ApiQuery({name: 'email', required: false})
+    async search(
+        @Query('username') username?: string,
+        @Query('firstName') firstName?: string,
+        @Query('lastName') lastName?: string,
+        @Query('email') email?: string,
+    ): Promise<User[]> {
+        return this.userService.search({username, firstName, lastName, email});
     }
 
     @Get(':id')
@@ -30,12 +52,6 @@ export class UserController {
         return this.userService.findById(+id);
     }
 
-    @Get(':username')
-    @ApiBearerAuth()
-    @ApiOkResponse({description: 'The user has been successfully retrieved.', type: User})
-    findByUsername(@Param('username') username: string) {
-        return this.userService.findByUsername(username);
-    }
 
     @Patch(':id')
     @ApiBearerAuth()
