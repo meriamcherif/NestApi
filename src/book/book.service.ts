@@ -32,10 +32,10 @@ export class BookService {
     async search(options: { title?: string, ISBN?: string; lastName?: string; email?: string }): Promise<Book[]> {
         const queryBuilder = this.bookRepository.createQueryBuilder('book');
         if (options.title) {
-            queryBuilder.andWhere('book.title LIKE :title', {title: `%${options.title}%`});
+            queryBuilder.andWhere('LOWER(book.title) LIKE LOWER(:title)', {title: `%${options.title}%`});
         }
         if (options.ISBN) {
-            queryBuilder.andWhere('book.ISBN LIKE :isbn', {isbn: `%${options.ISBN}%`});
+            queryBuilder.andWhere('LOWER(book.ISBN) LIKE LOWER(:isbn)', {isbn: `%${options.ISBN}%`});
         }
         return queryBuilder.getMany();
     }

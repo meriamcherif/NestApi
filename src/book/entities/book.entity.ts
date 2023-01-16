@@ -9,7 +9,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import {Author} from "../../author/entities/author.entity";
-import {Type} from "class-transformer";
+import {Exclude, Type} from "class-transformer";
 
 @Entity()
 export class Book {
@@ -33,12 +33,15 @@ export class Book {
     @Type(() => Author)
     authors: Author[];
 
+    @Exclude()
     @CreateDateColumn()
     createdAt: Date;
 
+    @Exclude()
     @UpdateDateColumn()
     updatedAt: Date;
 
+    @Exclude()
     @DeleteDateColumn()
     deletedAt: Date;
 }
