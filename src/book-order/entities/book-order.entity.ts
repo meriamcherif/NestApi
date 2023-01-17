@@ -8,7 +8,7 @@ export class BookOrder {
     id: number;
 
     @Column()
-    quantity: string;
+    quantity: number;
 
     @ManyToOne(() => Book)
     book: Book;
