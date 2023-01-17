@@ -2,30 +2,30 @@ import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import { BookModule } from './book/book.module';
-import { AuthorModule } from './author/author.module';
-import { UserModule } from './user/user.module';
-import { BookCardModule } from './book_card/book_card.module';
-import { ShoppingCardModule } from './shopping_card/shopping_card.module';
+import {BookModule} from './book/book.module';
+import {AuthorModule} from './author/author.module';
+import {UserModule} from './user/user.module';
+import {ShoppingCardModule} from './shopping-card/shopping-card.module';
+import {BookOrderModule} from './book-order/book-order.module';
 
 @Module({
     imports: [
         TypeOrmModule.forRoot({
-        type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
-        database: 'ktebi',
-        autoLoadEntities: true,
-        synchronize: true,
-        logging: true,
-    }),
+            type: 'postgres',
+            host: 'localhost',
+            port: 5432,
+            username: 'postgres',
+            password: 'postgres',
+            database: 'ktebi',
+            autoLoadEntities: true,
+            synchronize: true,
+            logging: true,
+        }),
         BookModule,
         AuthorModule,
         UserModule,
-        BookCardModule,
-        ShoppingCardModule],
+        ShoppingCardModule,
+        BookOrderModule],
     controllers: [AppController],
     providers: [AppService],
 })
