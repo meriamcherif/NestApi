@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 import {Author} from "../../author/entities/author.entity";
 import {Exclude, Type} from "class-transformer";
-import { Book_card } from 'src/book_card/entities/book_card.entity';
 
 @Entity()
 export class Book {
@@ -35,10 +34,6 @@ export class Book {
     @Type(() => Author)
     authors: Author[];
 
-    @OneToMany(() => Book_card, (book_card) => book_card.book_id)
-    book_cards: Book_card[]
-
-    
     @Exclude()
     @CreateDateColumn()
     createdAt: Date;
