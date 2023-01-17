@@ -5,6 +5,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import { BookModule } from './book/book.module';
 import { AuthorModule } from './author/author.module';
 import { UserModule } from './user/user.module';
+import { BookCardModule } from './book_card/book_card.module';
+import { ShoppingCardModule } from './shopping_card/shopping_card.module';
 
 @Module({
     imports: [
@@ -21,7 +23,9 @@ import { UserModule } from './user/user.module';
     }),
         BookModule,
         AuthorModule,
-        UserModule],
+        UserModule,
+        BookCardModule,
+        ShoppingCardModule],
     controllers: [AppController],
     providers: [AppService],
 })

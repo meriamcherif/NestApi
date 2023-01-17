@@ -5,40 +5,32 @@ import {
     Entity,
     JoinTable,
     ManyToMany,
+    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
-import {Author} from "../../author/entities/author.entity";
 import {Exclude, Type} from "class-transformer";
 import { Book_card } from 'src/book_card/entities/book_card.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Entity()
-export class Book {
+export class Shopping_card {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    title: string;
+    status: string;
 
-    @Column()
-    ISBN: string;
-
-    @Column()
-    publicationDate: Date;
-
-    @Column()
-    price: number;
-
-    @ManyToMany(type => Author)
-    @JoinTable()
-    @Type(() => Author)
-    authors: Author[];
-
-    @OneToMany(() => Book_card, (book_card) => book_card.book_id)
+    @OneToMany(() => Book_card, (book_card) => book_card.shopping_card_id)
     book_cards: Book_card[]
 
-    
+
+    @ManyToMany(type => User)
+    @JoinTable()
+    @Type(() => User)
+    authors: User[];
+
     @Exclude()
     @CreateDateColumn()
     createdAt: Date;
