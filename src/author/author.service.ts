@@ -14,15 +14,17 @@ export class AuthorService {
     }
 
     async findById(id: number): Promise<Author> {
-        const author = await this.authorRepository.findOneBy({id: id});
+        const author = (await this.authorRepository.find({where: {id: id}, relations: ['books']}))[0];
         if (author == null) {
             throw new NotFoundException(`Author with id ${id} not found`);
         }
         return author;
     }
+
     async findAll(): Promise<Author[]> {
         return this.authorRepository.find({relations: ['books']});
     }
+
     async create(createAuthorDto: CreateAuthorDto): Promise<Author> {
         const author = new Author();
         author.firstName = createAuthorDto.firstName;
@@ -37,7 +39,9 @@ export class AuthorService {
         return this.authorRepository.save(author);
     }
 
-    async remove(id: number): Promise<void> {
-        await this.authorRepository.softDelete(id);
+    async remove(id: number): Promise<Author> {
+        const author = await this.findById(id);
+        await this.authorRepository.softRemove(author);
+        return author;
     }
 }

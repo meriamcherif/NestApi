@@ -66,7 +66,7 @@ export class BookController {
 
     @Delete(':id')
     @UseInterceptors(ClassSerializerInterceptor)
-    remove(@Param('id') id: string) {
-        return this.bookService.remove(+id);
+    async remove(@Param('id') id: string) {
+        return await this.bookService.remove(+id);
     }
 }

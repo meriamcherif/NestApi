@@ -45,7 +45,7 @@ export class ShoppingCardService {
     }
 
     async findById(id: number): Promise<ShoppingCard> {
-        const shoppingCard = (await this.shoppingCardRepository.find({where: {id: id}, relations: ['books']}))[0];
+        const shoppingCard = (await this.shoppingCardRepository.find({where: {id: id}, relations: ['books', 'user']}))[0];
         if (shoppingCard == null) {
             throw new NotFoundException(`Shopping card with id ${id} not found`);
         }
@@ -80,6 +80,8 @@ export class ShoppingCardService {
     }
 
     async remove(id: number) {
-        return await this.shoppingCardRepository.softDelete(id);
+        const shoppingCard = await this.findById(id);
+        await this.shoppingCardRepository.softRemove(shoppingCard);
+        return shoppingCard;
     }
 }

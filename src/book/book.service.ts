@@ -22,7 +22,7 @@ export class BookService {
     }
 
     async findById(id: number): Promise<Book> {
-        const book = await this.bookRepository.findOneBy({id: id});
+        const book = (await this.bookRepository.find({where: {id: id}, relations: ['authors']}))[0];
         if (book == null) {
             throw new NotFoundException(`Book with id ${id} not found`);
         }
@@ -82,7 +82,9 @@ export class BookService {
         return await this.bookRepository.save(book);
     }
 
-    async remove(id: number): Promise<void> {
-        await this.bookRepository.softDelete(id);
+    async remove(id: number): Promise<Book> {
+        const book = await this.findById(id);
+        await this.bookRepository.softRemove(book);
+        return book;
     }
 }

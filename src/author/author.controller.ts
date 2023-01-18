@@ -46,7 +46,7 @@ export class AuthorController {
 
   @Delete(':id')
   @UseInterceptors(ClassSerializerInterceptor)
-  remove(@Param('id') id: string) {
-    return this.authorService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.authorService.remove(+id);
   }
 }
