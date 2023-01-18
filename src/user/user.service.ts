@@ -12,11 +12,13 @@ import { User } from './entities/user.entity';
 import { UserSubscribeDto } from './dto/subscribe-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -122,7 +124,7 @@ export class UserService {
     };
   }
 
-  async login(credentials: LoginCredentialsDto): Promise<Partial<User>> {
+  async login(credentials: LoginCredentialsDto) {
     {
       const { username, password } = credentials;
       const user = await this.userRepository
@@ -135,12 +137,18 @@ export class UserService {
       if (!user) throw new NotFoundException();
 
       const hashedPassword = await bcrypt.hash(password, user.salt);
-      if (hashedPassword === user.password)
-        return {
-          username,
+      if (hashedPassword === user.password) {
+        const payload = {
+          username: user.username,
           email: user.email,
           role: user.role,
         };
+        const jwt = await this.jwtService.sign(payload);
+
+        return {
+          access_token: jwt,
+        };
+      }
     }
   }
 }

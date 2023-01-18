@@ -112,7 +112,7 @@ export class UserController {
   }
 
   @Post('login')
-  login(@Body() credentials: LoginCredentialsDto): Promise<Partial<User>> {
+  login(@Body() credentials: LoginCredentialsDto) {
     return this.userService.login(credentials);
   }
 }
