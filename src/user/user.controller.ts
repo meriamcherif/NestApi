@@ -13,7 +13,7 @@ import {
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
-import {ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags,} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiCreatedResponse, ApiHeader, ApiOkResponse, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {User} from './entities/user.entity';
 import {LoginCredentialsDto} from './dto/login-credentials.dto';
 import {JwtAuthGuard} from "./Guards/jwt-auth-guard";
@@ -35,7 +35,6 @@ export class UserController {
         return await this.userService.create(createUserDto);
     }
 
-    @ApiBearerAuth()
     @ApiCreatedResponse({
         description: 'The users has been successfully retrieved.',
         type: User,
@@ -43,7 +42,6 @@ export class UserController {
     @ApiOkResponse({description: 'User already exist.', type: User})
     @UseInterceptors(ClassSerializerInterceptor)
     @Get()
-    @UseGuards(JwtAuthGuard)
     findAll() {
         return this.userService.findAll();
     }
@@ -69,7 +67,6 @@ export class UserController {
 
     @Get(':id')
     @UseInterceptors(ClassSerializerInterceptor)
-    @ApiBearerAuth()
     @ApiOkResponse({
         description: 'The user has been successfully retrieved.',
         type: User,
@@ -80,7 +77,6 @@ export class UserController {
 
     @Patch(':id')
     @UseInterceptors(ClassSerializerInterceptor)
-    @ApiBearerAuth()
     @ApiOkResponse({
         description: 'The user has been successfully updated.',
         type: User,

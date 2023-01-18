@@ -1,6 +1,12 @@
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
-import {BadRequestException, ConflictException, Injectable, NotFoundException,} from '@nestjs/common';
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {User} from './entities/user.entity';
@@ -130,7 +136,7 @@ export class UserService {
 
     async login(credentials: LoginCredentialsDto) {
         const {username, password} = credentials;
-        const user = await this.userRepository.createQueryBuilder('user').where('user.username = :username', {username}).getOne();
+        const user = await this.userRepository.createQueryBuilder('user').where('user.username = :username  ', {username}).getOne();
 
         if (user == null) {
             throw new NotFoundException();
@@ -148,6 +154,8 @@ export class UserService {
             return {
                 access_token: jwt,
             };
+        } else {
+            throw new UnauthorizedException("Invalid credentials");
         }
     }
 }
