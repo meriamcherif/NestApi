@@ -23,8 +23,8 @@ import { JwtStrategy } from './passport-jwt.strategy';
       },
     }),
   ],
-
   controllers: [UserController],
   providers: [UserService, JwtStrategy],
+  exports: [UserService],
 })
 export class UserModule {}
