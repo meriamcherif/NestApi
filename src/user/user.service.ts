@@ -117,22 +117,6 @@ export class UserService {
         return user;
     }
 
-    // async register(userData: UserSubscribeDto): Promise<Partial<User>> {
-    //     const user = this.userRepository.create({ ...userData });
-    //     user.salt = await bcrypt.gensalt();
-    //     user.password = await bcrypt.hash(user.password, user.salt);
-    //     try {
-    //         await this.userRepository.save(user);
-    //     } catch (e) {
-    //         throw new ConflictException();
-    //     }
-    //     return {
-    //         id: user.id,
-    //         username: user.username,
-    //         email: user.email,
-    //         password: user.password,
-    //     };
-    // }
 
     async login(credentials: LoginCredentialsDto) {
         const {username, password} = credentials;

@@ -7,16 +7,15 @@ import {
     Param,
     Patch,
     Post,
-    Query, UseGuards,
+    Query,
     UseInterceptors,
 } from '@nestjs/common';
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
-import {ApiBearerAuth, ApiCreatedResponse, ApiHeader, ApiOkResponse, ApiQuery, ApiTags,} from '@nestjs/swagger';
+import {ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {User} from './entities/user.entity';
 import {LoginCredentialsDto} from './dto/login-credentials.dto';
-import {JwtAuthGuard} from "./Guards/jwt-auth-guard";
 
 @Controller('user')
 @ApiTags('users')
