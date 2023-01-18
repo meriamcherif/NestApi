@@ -30,7 +30,9 @@ export class User {
     @Exclude()
     password: string;
 
+    @ApiProperty()
     @Column()
+    @Exclude()
     salt: string;
 
     @Column({
