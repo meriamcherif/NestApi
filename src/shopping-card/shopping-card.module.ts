@@ -4,11 +4,11 @@ import {ShoppingCardController} from './shopping-card.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {ShoppingCard} from "./entities/shopping-card.entity";
 import {UserModule} from "../user/user.module";
-import {BookOrderModule} from "../book-order/book-order.module";
+import {BookModule} from "../book/book.module";
 
 @Module({
     imports: [TypeOrmModule.forFeature([ShoppingCard]),
-    UserModule, BookOrderModule],
+        UserModule, BookModule],
     controllers: [ShoppingCardController],
     providers: [ShoppingCardService],
     exports: [ShoppingCardService]

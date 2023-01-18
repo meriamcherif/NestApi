@@ -21,7 +21,7 @@ export class AuthorService {
         return author;
     }
     async findAll(): Promise<Author[]> {
-        return this.authorRepository.find();
+        return this.authorRepository.find({relations: ['books']});
     }
     async create(createAuthorDto: CreateAuthorDto): Promise<Author> {
         const author = new Author();

@@ -29,13 +29,27 @@ export class BookService {
         return book;
     }
 
-    async search(options: { title?: string, ISBN?: string; lastName?: string; email?: string }): Promise<Book[]> {
+    async search(options: { title?: string, ISBN?: string; lastName?: string; minPrice?: number; maxPrice?: number, author?: string }): Promise<Book[]> {
         const queryBuilder = this.bookRepository.createQueryBuilder('book');
+        queryBuilder.innerJoin('book.authors', 'author');
         if (options.title) {
             queryBuilder.andWhere('LOWER(book.title) LIKE LOWER(:title)', {title: `%${options.title}%`});
         }
         if (options.ISBN) {
             queryBuilder.andWhere('LOWER(book.ISBN) LIKE LOWER(:isbn)', {isbn: `%${options.ISBN}%`});
+        }
+        if (options.minPrice) {
+            queryBuilder.andWhere('book.price >= :minPrice', {minPrice: options.minPrice});
+        }
+        if (options.maxPrice) {
+            queryBuilder.andWhere('book.price <= :maxPrice', {maxPrice: options.maxPrice});
+        }
+
+        if (options.author) {
+            queryBuilder.andWhere(
+                `LOWER(author.firstName) LIKE LOWER(:author) OR LOWER(author.lastName) LIKE LOWER(:author)`,
+                {author: `%${options.author}%`},
+            );
         }
         return queryBuilder.getMany();
     }

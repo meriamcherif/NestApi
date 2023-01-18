@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateShoppingCardDto } from './create-shopping-card.dto';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsNotEmpty} from "class-validator";
 
-export class UpdateShoppingCardDto extends PartialType(CreateShoppingCardDto) {}
+export class UpdateShoppingCardDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    booksId: number[];
+}

@@ -39,11 +39,17 @@ export class BookController {
     @ApiOkResponse({type: [User]})
     @ApiQuery({name: 'title', required: false})
     @ApiQuery({name: 'ISBN', required: false})
+    @ApiQuery({name: 'minPrice', required: false})
+    @ApiQuery({name: 'maxPrice', required: false})
+    @ApiQuery({name: 'author', required: false})
     search(
         @Query('title') title?: string,
         @Query('ISBN') ISBN?: string,
+        @Query('minPrice') minPrice?: number,
+        @Query('maxPrice') maxPrice?: number,
+        @Query('author') author?: string,
     ) {
-        return this.bookService.search({title, ISBN});
+        return this.bookService.search({title, ISBN, minPrice, maxPrice, author});
     }
 
     @Get(':id')

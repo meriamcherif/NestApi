@@ -36,7 +36,7 @@ export class UserService {
     }
 
     async findById(id: number): Promise<User> {
-        const user = await this.userRepository.findOneBy({id: id});
+        const user = (await this.userRepository.find({where: {id: id}}))[0];
         if (user == null) {
             throw new NotFoundException(`User with id ${id} not found`);
         }
@@ -79,7 +79,9 @@ export class UserService {
         return await this.findById(id);
     }
 
-    async remove(id: number): Promise<void> {
-        await this.userRepository.softDelete(id);
+    async remove(id: number): Promise<User> {
+        const user = await this.findById(id);
+        await this.userRepository.softRemove(user);
+        return user;
     }
 }

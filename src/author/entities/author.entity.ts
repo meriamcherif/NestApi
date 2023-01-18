@@ -1,5 +1,15 @@
-import {Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    JoinTable,
+    ManyToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from 'typeorm';
 import {Exclude} from "class-transformer";
+import {Book} from "../../book/entities/book.entity";
 
 @Entity()
 export class Author {
@@ -11,8 +21,12 @@ export class Author {
 
     @Column()
     lastName: string;
-    @Exclude()
 
+    @ManyToMany(() => Book, book => book.authors)
+    @JoinTable()
+    books: Book[];
+
+    @Exclude()
     @CreateDateColumn()
     createdAt: Date;
 

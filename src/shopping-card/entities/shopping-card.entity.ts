@@ -1,7 +1,19 @@
-import {Column, CreateDateColumn, DeleteDateColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
 import {User} from "../../user/entities/user.entity";
 import {Exclude} from "class-transformer";
+import {Book} from "../../book/entities/book.entity";
 
+@Entity()
 export class ShoppingCard {
     @PrimaryGeneratedColumn()
     id: number;
@@ -11,6 +23,11 @@ export class ShoppingCard {
 
     @ManyToOne(() => User)
     user: User;
+
+
+    @ManyToMany(() => Book)
+    @JoinTable()
+    books: Book[];
 
     @Exclude()
     @CreateDateColumn()

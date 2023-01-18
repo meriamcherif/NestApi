@@ -15,7 +15,6 @@ import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {User} from "./entities/user.entity";
-import {classToPlain} from "class-transformer";
 
 @Controller('user')
 @ApiTags('users')
@@ -79,7 +78,7 @@ export class UserController {
 
     @Delete(':id')
     @UseInterceptors(ClassSerializerInterceptor)
-    remove(@Param('id') id: string) {
-        return this.userService.remove(+id);
+    async remove(@Param('id') id: string) {
+        return await this.userService.remove(+id);
     }
 }

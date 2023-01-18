@@ -1,4 +1,4 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 import {ApiProperty} from '@nestjs/swagger';
 import {Exclude} from "class-transformer";
 
@@ -28,4 +28,16 @@ export class User {
     @Column()
     @Exclude()
     password: string;
+
+    @Exclude()
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @Exclude()
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @Exclude()
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
